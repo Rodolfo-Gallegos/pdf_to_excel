@@ -128,4 +128,4 @@ python3 pdf_to_xlsx.py document.pdf --clean --md --csv -o final_results.xlsx
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-_Bilingual Documentation: [English](README.md) | [Spanish](README_ES.md)_
+_Documentation: [English](README.md) | [Español](README_ES.md)_

@@ -128,4 +128,4 @@ python3 pdf_to_xlsx.py documento.pdf --clean --md --csv -o tablas_excel.xlsx
 Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
-_Documentación Bilingüe: [Inglés](README.md) | [Español](README_ES.md)_
+_Documentación: [English](README.md) | [Español](README_ES.md)_
