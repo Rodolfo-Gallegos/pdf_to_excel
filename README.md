@@ -15,11 +15,21 @@ A robust AI-powered tool that extracts tables from PDF files by analyzing pages 
 
 ## ✨ Features
 
-- **Multimodal AI**: Uses computer vision to "see" and extract tables exactly as they appear.
-- **Premium GUI**: Modern, user-friendly interface with real-time logs and progress tracking.
+- **Multimodal AI**: Uses computer vision to extract tables exactly as they appear.
+- **Graphical Interface (GUI)**: User-friendly interface with real-time logs and progress tracking.
 - **Multi-format Export**: Save results to **Excel (.xlsx)**, **CSV**, and **Markdown**.
-- **Data Cleaning**: One-click normalization to remove currency symbols and fix numeric formats.
+- **Data Cleaning**: Optional normalization to remove currency symbols and fix numeric formats.
 - **Automated Setup**: One-click installer for Windows users.
+
+## 🤖 LLM Compatibility & Purpose
+
+The main goal of this project is to provide **clean, structured data** from complex PDFs. The generated formats (especially Markdown and CSV) are designed to be easily "copy-pasted" into other Large Language Models (ChatGPT, Claude, Gemini, etc.).
+
+This allows you to leverage AI for further tasks such as:
+
+- Converting data to **LaTeX** tables.
+- Performing **deep data cleaning** or advanced analysis.
+- Reformatting results into custom JSON or code structures.
 
 ## 🎥 Video Tutorial
 
@@ -48,7 +58,7 @@ A robust AI-powered tool that extracts tables from PDF files by analyzing pages 
 
 ### Option 1: Graphical Interface (Recommended)
 
-Launch the premium app to manage everything visually:
+Launch the app to manage everything visually:
 
 ```bash
 python3 gui_app.py

@@ -15,11 +15,21 @@ Una herramienta robusta potenciada por IA que extrae tablas de archivos PDF anal
 
 ## ✨ Características
 
-- **IA Multimodal**: Utiliza visión artificial para "ver" y extraer tablas exactamente como aparecen.
-- **Interfaz Premium (GUI)**: Pantalla moderna y fácil de usar con registro en tiempo real y barra de progreso.
+- **IA Multimodal**: Utiliza visión artificial para extraer tablas exactamente como aparecen.
+- **Interfaz Gráfica (GUI)**: Pantalla de uso sencillo con registro en tiempo real y barra de progreso.
 - **Exportación Multi-formato**: Guarda resultados en **Excel (.xlsx)**, **CSV** y **Markdown**.
-- **Limpieza de Datos**: Normalización con un clic para eliminar símbolos de moneda y fijar formatos numéricos.
+- **Limpieza de Datos**: Normalización opcional para eliminar símbolos de moneda y fijar formatos numéricos.
 - **Instalación Automatizada**: Script de configuración para usuarios de Windows.
+
+## 🤖 Compatibilidad con LLMs y Propósito
+
+El objetivo principal de este proyecto es proporcionar **datos estructurados y limpios** a partir de PDFs complejos. Los formatos generados (especialmente Markdown y CSV) están diseñados para ser "copiados y pegados" fácilmente en otros Modelos de Lenguaje (ChatGPT, Claude, Gemini, etc.).
+
+Esto permite aprovechar la IA para tareas adicionales como:
+
+- Convertir los datos a tablas en **LaTeX**.
+- Realizar una **limpieza profunda** o análisis de datos avanzado.
+- Reformatear los resultados en estructuras personalizadas de JSON o código.
 
 ## 🎥 Video Tutorial
 
@@ -48,7 +58,7 @@ Una herramienta robusta potenciada por IA que extrae tablas de archivos PDF anal
 
 ### Opción 1: Interfaz Gráfica (Recomendado)
 
-Inicia la aplicación premium para gestionar todo visualmente:
+Inicia la aplicación para gestionar todo visualmente:
 
 ```bash
 python3 gui_app.py
