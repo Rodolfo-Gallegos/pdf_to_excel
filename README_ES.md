@@ -6,9 +6,9 @@ Una herramienta robusta potenciada por IA que extrae tablas de archivos PDF anal
 
 ### PDF Origen vs. Salida
 
-| 1. PDF Original | 2. Resultado Excel | 3. Resultado Markdown |
-| :---: | :---: | :---: |
-| ![PDF Original](screenshots/pdf_tables.png) | ![Salida Excel](screenshots/xlsx_table.png) | ![Salida Markdown](screenshots/markdown_table.png) |
+| 1. PDF Original | 2. Resultado Excel | 3. Resultado Markdown | 4. Resultado CSV |
+| :---: | :---: | :---: | :---: |
+| ![PDF Original](screenshots/pdf_tables.png) | ![Salida Excel](screenshots/xlsx_table.png) | ![Salida Markdown](screenshots/markdown_table.png) | ![Salida CSV](screenshots/csv_table.png) |
 
 > [!TIP]
 > **Del caos visual a datos estructurados en segundos.** Ideal para documentos escaneados, cotizaciones de seguros y reportes complejos.
@@ -50,8 +50,8 @@ Al modificar estas líneas, puedes decirle a Gemini:
 - _"Formatea el resultado como una tabla larga (longtable) de LaTeX..."_
 - _"Resume el texto sobre la tabla y luego extrae los datos..."_
 
-[![Video Tutorial](https://img.shields.io/badge/YouTube-Video%20Tutorial-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=tu_video_id_aqui)
-_En este video explico cómo configurar el repositorio y cómo usar tanto la versión gráfica como la de terminal._
+<!-- [![Video Tutorial](https://img.shields.io/badge/YouTube-Video%20Tutorial-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=tu_video_id_aqui)
+_En este video explico cómo configurar el repositorio y cómo usar tanto la versión gráfica como la de terminal._ -->
 
 ---
 

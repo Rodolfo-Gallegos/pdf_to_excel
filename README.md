@@ -6,9 +6,9 @@ A robust AI-powered tool that extracts tables from PDF files by analyzing pages 
 
 ### Input vs. Output
 
-| 1. Source PDF | 2. Excel Result | 3. Markdown Result |
-| :---: | :---: | :---: |
-| ![Original PDF](screenshots/pdf_tables.png) | ![Excel Output](screenshots/xlsx_table.png) | ![Markdown Output](screenshots/markdown_table.png) |
+| 1. Source PDF | 2. Excel Result | 3. Markdown Result | 4. CSV Result |
+| :---: | :---: | :---: | :---: |
+| ![Original PDF](screenshots/pdf_tables.png) | ![Excel Output](screenshots/xlsx_table.png) | ![Markdown Output](screenshots/markdown_table.png) | ![CSV Output](screenshots/csv_table.png) |
 
 > [!TIP]
 > **From visual chaos to structured data in seconds.** Perfect for scanned documents, insurance quotes, and complex reports.
@@ -50,8 +50,8 @@ By modifying these lines, you can tell Gemini to:
 - _"Format the result as a LaTeX longtable..."_
 - _"Summarize the text above the table and then extract the data..."_
 
-[![Video Tutorial](https://img.shields.io/badge/YouTube-Video%20Tutorial-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=tu_video_id_aqui)
-_In this video, I explain how to set up the repository and use both the GUI and CLI versions._
+<!-- [![Video Tutorial](https://img.shields.io/badge/YouTube-Video%20Tutorial-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=tu_video_id_aqui)
+_In this video, I explain how to set up the repository and use both the GUI and CLI versions._ -->
 
 ---
 
