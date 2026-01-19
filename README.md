@@ -10,9 +10,9 @@ An AI-powered tool that extracts tables from PDF files using Gemini AI.
 
 ## Interface showcase
 
-| Main Menu | Processing... | Prompt Editor |
+| Prompt editor | Main menu | Extraction completed |
 | :---: | :---: | :---: |
-| ![Main Interface](docs/screenshots/before_extraction.png) | ![Extraction Progress](docs/screenshots/extraction_completed.png) | ![Prompt Editor](docs/screenshots/prompt_editor.png) |
+| ![Prompt editor](docs/screenshots/prompt_editor.png) | ![Main menu](docs/screenshots/before_extraction.png) | ![Extraction completed](docs/screenshots/extraction_completed.png) |
 
 ---
 
