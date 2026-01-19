@@ -39,8 +39,8 @@ You can customize how the AI analyzes each page by modifying the **system prompt
 
 The prompt is located in:
 
-- **CLI**: `pdf_to_xlsx.py` inside the `process_page_images()` function.
-- **GUI**: `gui_app.py` inside the `_extract_from_page()` method.
+- **CLI**: `src/logic/processor.py` inside the `extract_from_page()` function.
+- **GUI**: Use the **"Edit Prompt"** button directly in the interface or modify `src/config.py` to change the default value.
 
 ### Current Prompt
 >
@@ -76,30 +76,42 @@ _In this video, I explain how to set up the repository and use both the GUI and 
 
 ## 🛠️ How to Use
 
-### Option 1: Graphical Interface (Recommended)
+### Version 1: Graphical Interface (GUI)
 
 Launch the app to manage everything visually:
 
 ```bash
-python3 gui_app.py
+python main.py
 ```
 
 | Initial Setup | Extraction Progress |
 | :---: | :---: |
 | ![GUI Setup](screenshots/before_extraction.png) | ![GUI Progress](screenshots/extraction_completed.png) |
 
-### Option 2: Command Line (Advanced/Automation)
+### Version 2: Command Line (CLI)
 
-Run the script directly for quick processing or automation:
+Run the script directly for quick processing:
 
 ```bash
-python3 pdf_to_xlsx.py document.pdf --clean --md --csv -o final_results.xlsx
+python pdf_to_xlsx.py file1.pdf file2.pdf --output results.xlsx
 ```
 
-- `--clean`: Normalizes data (removes '$', ',', etc.).
-- `--md` / `--csv`: Generates additional formats.
-
 ---
+
+## 🛠 Project Structure
+
+```text
+PDF_to_XLSX/
+├── src/               # Source code
+│   ├── ui/            # UI components
+│   ├── logic/         # Processing logic
+│   └── config.py      # Texts and constants
+├── main.py            # Entry point (GUI)
+├── pdf_to_xlsx.py     # Entry point (CLI)
+├── run_unix.sh        # Linux/macOS launcher
+├── setup_windows.bat  # Windows launcher
+└── icons/             # UI assets
+```
 
 ## ⚙️ Configuration & API Key
 

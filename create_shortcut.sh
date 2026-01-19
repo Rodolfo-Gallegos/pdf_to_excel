@@ -21,7 +21,7 @@ cat <<EOF > "$DESKTOP_FILE"
 [Desktop Entry]
 Name=PDF Table Extractor
 Comment=Extract tables from PDFs using Gemini AI
-Exec=$PYTHON_PATH $SCRIPT_DIR/gui_app.py
+Exec=$PYTHON_PATH $SCRIPT_DIR/main.py
 Path=$SCRIPT_DIR
 Icon=$ICON_PATH
 Terminal=false

@@ -39,8 +39,8 @@ Puedes personalizar cómo la IA analiza cada página modificando el **prompt del
 
 El prompt se encuentra en:
 
-- **CLI**: `pdf_to_xlsx.py` dentro de la función `process_page_images()`.
-- **GUI**: `gui_app.py` dentro del método `_extract_from_page()`.
+- **CLI**: `src/logic/processor.py` dentro de la función `extract_from_page()`.
+- **GUI**: Mediante el botón **"Editar Prompt"** en la interfaz o modificando `src/config.py` para cambiar el valor predeterminado.
 
 ### Prompt Actual
 >
@@ -76,39 +76,46 @@ _En este video explico cómo configurar el repositorio y cómo usar tanto la ver
 
 ## 🛠️ Modo de Uso
 
-### Opción 1: Interfaz Gráfica (Recomendado)
+### Versión 1: Interfaz Gráfica (GUI)
 
 Inicia la aplicación para gestionar todo visualmente:
 
 ```bash
-python3 gui_app.py
+python main.py
 ```
 
 | Configuración Inicial | Progreso de Extracción |
 | :---: | :---: |
 | ![Setup GUI](screenshots/before_extraction.png) | ![Progreso GUI](screenshots/extraction_completed.png) |
 
-### Opción 2: Línea de Comandos (Avanzado/Automatización)
+### Versión 2: Línea de Comandos (CLI)
 
-Ejecuta el script directamente para procesamiento rápido o automatización:
+Ejecuta el script directamente para procesamiento rápido:
 
 ```bash
-python3 pdf_to_xlsx.py documento.pdf --clean --md --csv -o tablas_excel.xlsx
+python pdf_to_xlsx.py archivo1.pdf archivo2.pdf --output resultados.xlsx
 ```
 
-- `--clean`: Normaliza los datos (quita '$', ',', etc.).
-- `--md` / `--csv`: Genera formatos adicionales.
-
 ---
+
+## 🛠 Estructura del Proyecto
+
+```text
+PDF_to_XLSX/
+├── src/               # Código fuente
+│   ├── ui/            # Componentes de interfaz
+│   ├── logic/         # Lógica de procesamiento
+│   └── config.py      # Textos y constantes
+├── main.py            # Punto de entrada (GUI)
+├── pdf_to_xlsx.py     # Punto de entrada (CLI)
+├── run_unix.sh        # Lanzador Linux/macOS
+├── setup_windows.bat  # Lanzador Windows
+└── icons/             # Activos de la interfaz
+```
 
 ## ⚙️ Configuración y Llave API
 
 ### 1. Requisitos
-
-- Python 3.8+
-- Una llave de API de Google Gemini
-
-### 2. Configura tu API Key
 
 1. Consigue tu clave gratuita en [Google AI Studio](https://aistudio.google.com/api-keys).
 2. Edita el archivo `api_key.env` existente en la raíz y sustituye el marcador:

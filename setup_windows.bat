@@ -43,7 +43,7 @@ echo [OK] Dependencies installed.
 :: 4. Launch GUI
 echo.
 echo [*] Launching PDF Table Extractor GUI...
-start pythonw gui_app.py
+start pythonw main.py
 
 echo.
 echo ==================================================
