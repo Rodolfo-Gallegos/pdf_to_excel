@@ -51,8 +51,10 @@ if !errorlevel! neq 0 (
 set "SC_NAME=PDF Table Extractor.lnk"
 set "SC_PATH=%USERPROFILE%\Desktop\%SC_NAME%"
 
-if not exist "%SC_PATH%" (
-    echo [*] Creating Desktop Shortcut...
+    echo [*] Ensuring Icon exists...
+    !PYTHON_CMD! "%~dp0src\create_ico.py" >nul 2>&1
+    
+    echo [*] Updating Desktop Shortcut...
     :: Get full path to pythonw based on our found python command
     for /f "delims=" %%I in ('where !PYTHON_CMD!') do (
         set "PYTHON_EXE=%%I"
@@ -64,16 +66,8 @@ if not exist "%SC_PATH%" (
     )
     :found_exe
     
-    powershell -ExecutionPolicy Bypass -Command ^
-        "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%SC_PATH%'); ^
-        $s.TargetPath='!PYTHONW_EXE!'; ^
-        $s.Arguments='\"%~dp0src\main.py\"'; ^
-        $s.WorkingDirectory='%~dp0'; ^
-        $s.IconLocation='%~dp0src\assets\icons\pdf_to_excel.png'; ^
-        $s.Description='Extract tables from PDF using AI'; ^
-        $s.Save()"
-    echo [OK] Shortcut created on Desktop.
-)
+    powershell -ExecutionPolicy Bypass -Command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%SC_PATH%'); $s.TargetPath='!PYTHONW_EXE!'; $s.Arguments='-m src.main'; $s.WorkingDirectory='%~dp0'; $s.IconLocation='%~dp0src\assets\icons\pdf_to_excel.ico'; $s.Description='Extract tables from PDF using AI'; $s.Save()"
+    echo [OK] Shortcut updated.
 
 :: 4. Launch GUI
 echo [*] Launching Application...
@@ -83,9 +77,9 @@ for /f "delims=" %%I in ('where !PYTHON_CMD!') do (
     set "PW=!EXE:python.exe=pythonw.exe!"
     set "PW=!PW:python3.exe=pythonw3.exe!"
     if exist "!PW!" (
-        start "" "!PW!" "%~dp0src\main.py"
+        start "" "!PW!" -m src.main
     ) else (
-        start "" "!EXE!" "%~dp0src\main.py"
+        start "" "!EXE!" -m src.main
     )
     goto :launched
 )
