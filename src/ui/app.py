@@ -50,7 +50,7 @@ class PDFToXLSXGUI:
         self._has_error = False
         
         # State Variables
-        self.lang = "ES" 
+        self.lang = "EN" 
         self.current_prompt = DEFAULT_PROMPT
         self.ui_elements = {}
 
@@ -232,31 +232,66 @@ class PDFToXLSXGUI:
 
     def _update_ui_language(self):
         t = TEXTS[self.lang]
-        for key, val in t.items():
-            if key in self.ui_elements:
+        
+        # Mappings of widget references in ui_elements to TEXTS keys
+        mappings = {
+            "title": "title",
+            "config_section": "config_section",
+            "api_key_label": "api_key",
+            "paste_key_btn": "paste_key",
+            "clear_key_btn": "clear_key",
+            "save_key_btn": "save_key",
+            "get_key_link": "get_key",
+            "edit_prompt_btn": "edit_prompt",
+            "lang_label": "language",
+            "ilovepdf_link": "ilovepdf",
+            "pdf_selection": "pdf_selection",
+            "select_files_label": "select_files",
+            "add_files_btn": "add_files",
+            "clear_btn": "clear",
+            "output_config": "output_config",
+            "output_folder_label": "output_folder",
+            "browse_btn": "browse",
+            "excel_name_label": "excel_name",
+            "csv_name_label": "csv_name",
+            "md_name_label": "md_name",
+            "options_section": "options_section",
+            "opt_excel": "opt_excel",
+            "opt_md": "opt_md",
+            "opt_csv": "opt_csv",
+            "opt_normalize": "opt_normalize",
+            "start_btn": "start_btn",
+            "status_log": "status_log"
+        }
+
+        for widget_key, text_key in mappings.items():
+            if widget_key in self.ui_elements:
                 try:
-                    self.ui_elements[key].config(text=val)
+                    self.ui_elements[widget_key].config(text=t[text_key])
                 except:
                     pass
+
         self.ui_elements["ilovepdf_link"].unbind("<Button-1>")
         self.ui_elements["ilovepdf_link"].bind("<Button-1>", lambda e: webbrowser.open("https://www.ilovepdf.com/" + ("es" if self.lang == "ES" else "")))
 
     def _open_prompt_editor(self):
         editor = tk.Toplevel(self.root)
         editor.title(TEXTS[self.lang]["prompt_editor_title"])
-        editor.geometry("600x450")
+        editor.geometry("550x400") # Balanced size
         editor.transient(self.root)
         editor.grab_set()
 
         content_f = ttk.Frame(editor, padding=10)
         content_f.pack(fill="both", expand=True)
 
-        txt_area = scrolledtext.ScrolledText(content_f, font=("Segoe UI", 10), wrap="word")
-        txt_area.pack(fill="both", expand=True, pady=(0, 10))
-        txt_area.insert(tk.END, self.current_prompt)
-
+        # Pack button frame first at the bottom to ensure visibility
         btn_f = ttk.Frame(content_f)
-        btn_f.pack(fill="x")
+        btn_f.pack(side="bottom", fill="x", pady=(10, 0))
+
+        # Pack text area to take remaining space at the top
+        txt_area = scrolledtext.ScrolledText(content_f, font=("Segoe UI", 12), wrap="word")
+        txt_area.pack(side="top", fill="both", expand=True)
+        txt_area.insert(tk.END, self.current_prompt)
 
         def save_prompt():
             self.current_prompt = txt_area.get("1.0", tk.END).strip()
