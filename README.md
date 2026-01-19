@@ -1,14 +1,14 @@
-# PDF to EXCEL/CSV/MD AI Extractor
+# PDF to EXCEL/CSV/MD AI extractor
 
 An AI-powered tool that extracts tables from PDF files using Gemini AI.
 
-## Result Showcase
+## Result showcase
 
 | 1. Source PDF | 2. Excel Result | 3. Markdown Result | 4. CSV Result |
 | :---: | :---: | :---: | :---: |
 | ![Original PDF](docs/screenshots/pdf_tables.png) | ![Excel Output](docs/screenshots/xlsx_table.png) | ![Markdown Output](docs/screenshots/markdown_table.png) | ![CSV Output](docs/screenshots/csv_table.png) |
 
-## Interface Showcase
+## Interface showcase
 
 | Main Menu | Processing... | Prompt Editor |
 | :---: | :---: | :---: |
@@ -16,7 +16,7 @@ An AI-powered tool that extracts tables from PDF files using Gemini AI.
 
 ---
 
-## How to Run
+## How to run
 
 ### **Windows**
 
@@ -31,27 +31,27 @@ An AI-powered tool that extracts tables from PDF files using Gemini AI.
 
 ---
 
-## 📂 Project Structure
+## Project structure
 
 - `Windows_exec.bat`: Main launcher for Windows.
 - `Linux_exec.sh`: Main launcher for Linux/macOS.
 - `src/`: Source code and assets (Internal).
 - `docs/`: Full documentation and screenshots.
 
-## 📄 Documentation
+## Documentation
 
 - [Full Documentation (English)](docs/User_guide.md)
 - [Documentación Completa (Español)](docs/Guia_de_usuario.md)
 
 ---
 
-## 💡 Important Note on Excel Results
+## Note on Excel results
 
 The output Excel file contains a **"Summary"** sheet followed by a specific data sheet for each processed PDF file. You will find your tables starting from the second sheet.
 
-## 🧠 Selective Processing
+## Selective processing
 
 You can now ask the AI to process specific pages by modifying the prompt:
 
-- _"Revisa solo la página 2"_
-- _"Extraer tablas de las páginas 1 a 3"_
+- _"Extract tables from page 2"_
+- _"Extract tables from pages 1 to 3"_
