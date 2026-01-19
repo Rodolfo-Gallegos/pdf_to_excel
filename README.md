@@ -2,13 +2,13 @@
 
 An AI-powered tool that extracts tables from PDF files using Gemini AI.
 
-## � Result Showcase
+## Result Showcase
 
 | 1. Source PDF | 2. Excel Result | 3. Markdown Result | 4. CSV Result |
 | :---: | :---: | :---: | :---: |
 | ![Original PDF](docs/screenshots/pdf_tables.png) | ![Excel Output](docs/screenshots/xlsx_table.png) | ![Markdown Output](docs/screenshots/markdown_table.png) | ![CSV Output](docs/screenshots/csv_table.png) |
 
-## 🖼️ Interface Showcase
+## Interface Showcase
 
 | Main Menu | Processing... | Prompt Editor |
 | :---: | :---: | :---: |
@@ -16,7 +16,7 @@ An AI-powered tool that extracts tables from PDF files using Gemini AI.
 
 ---
 
-## �🚀 How to Run
+## How to Run
 
 ### **Windows**
 
