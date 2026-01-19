@@ -16,9 +16,38 @@ Una herramienta potenciada por IA que extrae tablas de archivos PDF analizando l
 - **IA Multimodal**: Extracción mediante visión artificial.
 - **Interfaz Gráfica (GUI)**: Registro en tiempo real y progreso.
 - **Multi-formato**: Excel (.xlsx), CSV y Markdown.
-- **Procesamiento Selectivo**: Indica páginas específicas (ej: "Página 2").
+- **Procesamiento Selectivo**: Control avanzado sobre qué páginas analizar mediante lenguaje natural.
 
-## 📂 Estructura del Proyecto
+---
+
+## 🧠 Selección inteligente de páginas
+
+El "prompt" de la IA no solo sirve para decirle a Gemini cómo extraer los datos, sino también para especificar **qué** datos mirar. Puedes usar lenguaje natural para filtrar páginas y documentos.
+
+### Selección básica
+
+- **Página única:** _"Extraer tablas de la página 3"_
+- **Listas:** _"Procesar páginas 1, 5 y 10"_
+- **Rangos:** _"Obtener datos usando las páginas 2 a la 6"_
+
+### Selección por ordinales (Palabras clave)
+
+El sistema entiende números ordinales (tanto en español como en inglés):
+
+- _"Extraer la **primera** página y la **última** página"_
+- _"Procesar la **tercera** y **quinta** página"_
+- **Palabras soportadas:** primera, segunda, ..., décima, última (y sus variantes en inglés).
+
+### Filtrado por documento
+
+Al procesar varios archivos a la vez, puedes dirigir la instrucción a archivos específicos:
+
+- _"Extraer página 1 de **Cotizacion_A.pdf** y la última página de **Cotizacion_B.pdf**"_
+- _"Extraer tablas de **Doc1**"_ (Esto omitirá otros archivos en la cola de procesamiento)
+
+---
+
+## 📂 Estructura del proyecto
 
 ```text
 PDF_to_XLSX/
@@ -37,7 +66,7 @@ PDF_to_XLSX/
     └── api_key.env      # Configuración de Clave API
 ```
 
-## 🚀 Inicio Rápido
+## 🚀 Inicio rápido
 
 ### En Windows
 

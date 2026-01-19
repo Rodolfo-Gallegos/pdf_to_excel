@@ -49,9 +49,18 @@ An AI-powered tool that extracts tables from PDF files (scanned/digital) using G
 
 The output Excel file contains a **"Summary"** sheet followed by a specific data sheet for each processed PDF file. You will find your tables starting from the second sheet.
 
-## Selective processing
+## Smart page selection
 
-You can now ask the AI to process specific pages by modifying the prompt:
+You can ask the AI to process specific pages or files by modifying the prompt. It supports ranges, ordinals, and multi-file filtering:
 
-- _"Extract tables from page 2"_
-- _"Extract tables from pages 1 to 3"_
+- **Specific pages:** _"Extract pages 1, 3 and 5"_
+- **Ranges:** _"Extract from page 2 to 4"_
+- **Ordinals:** _"Extract the first page and the last page"_
+- **File filtering:** _"Extract page 1 from DocumentA and page 2 from DocumentB"_
+
+**Spanish examples / Ejemplos en español:**
+
+- _"Extraer páginas 1, 3 y 5"_
+- _"Extraer de la página 2 a la 4"_
+- _"Extraer la primera y la última página"_
+- _"Extraer p1 de DocA y p2 de DocB"_
