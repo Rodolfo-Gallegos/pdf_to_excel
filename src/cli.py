@@ -8,7 +8,8 @@ from google import genai
 from dotenv import load_dotenv
 
 # Modular imports
-from src.logic.processor import normalize_df, parse_md, extract_from_page
+# Modular imports
+from src.logic.processor import normalize_df, parse_md, extract_from_page, parse_page_query
 from src.config import DEFAULT_PROMPT
 
 # Configure logging
@@ -45,7 +46,11 @@ def main(pdf_files, output_path, save_md=False, save_csv=False, clean=False):
         
         try:
             with pdfplumber.open(pdf_path) as pdf:
-                for page in pdf.pages:
+                total_pages = len(pdf.pages)
+                pages_to_process = parse_page_query(DEFAULT_PROMPT, total_pages)
+                
+                for p_idx in pages_to_process:
+                    page = pdf.pages[p_idx]
                     res = extract_from_page(client, page, DEFAULT_PROMPT, 
                                           lambda p: logger.info(f"  - Analyzing page {p}..."))
                     all_results.extend(res)

@@ -1,4 +1,5 @@
 import time
+import re
 import pandas as pd
 from typing import List, Dict, Any, Optional
 from google import genai
@@ -36,6 +37,44 @@ def parse_md(md_text: str) -> pd.DataFrame:
     max_cols = max(len(row) for row in data)
     norm_data = [row + [''] * (max_cols - len(row)) for row in data]
     return pd.DataFrame(norm_data)
+
+def parse_page_query(prompt: str, total_pages: int) -> List[int]:
+    """
+    Parses the prompt to find page references like 'página 2', 'page 1-3', etc.
+    Returns a list of 0-indexed page numbers.
+    """
+    prompt_lower = prompt.lower()
+    
+    # Check for keywords related to single pages or ranges
+    # Examples: "página 2", "page 3", "páginas 1 a 3", "pages 2-4"
+    patterns = [
+        r"(?:p\u00e1gina|page)\s+(\d+)",           # "página 2"
+        r"(?:p\u00e1ginas|pages)\s+(\d+)\s+(?:a|to|-)\s+(\d+)", # "páginas 1 a 3"
+        r"(?:p\u00e1ginas|pages)\s+(\d+)(?:,)\s*(\d+)", # "páginas 1, 2" (simple case)
+    ]
+    
+    selected_pages = set()
+    
+    # Pattern 1: Range "pages 1 to 3"
+    range_match = re.search(r"(?:p\u00e1ginas|pages)\s+(\d+)\s*(?:a|to|-)\s*(\d+)", prompt_lower)
+    if range_match:
+        start = int(range_match.group(1))
+        end = int(range_match.group(2))
+        for p in range(start, end + 1):
+            if 1 <= p <= total_pages:
+                selected_pages.add(p - 1)
+        return sorted(list(selected_pages))
+
+    # Pattern 2: Single page "page 2"
+    single_match = re.search(r"(?:p\u00e1gina|page)\s+(\d+)", prompt_lower)
+    if single_match:
+        p = int(single_match.group(1))
+        if 1 <= p <= total_pages:
+            selected_pages.add(p - 1)
+        return sorted(list(selected_pages))
+
+    # If no specific page found, return all pages
+    return list(range(total_pages))
 
 def extract_from_page(client: genai.Client, page: Any, prompt: str, log_callback=None, error_tracker: Dict[str, bool] = None) -> List[Dict[str, Any]]:
     """Extracts tables from a single PDF page."""

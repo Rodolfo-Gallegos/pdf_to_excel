@@ -14,8 +14,9 @@ from dotenv import load_dotenv, set_key
 from PIL import Image, ImageTk
 
 # Modular imports
+from src import config
 from src.config import VERSION, DEFAULT_PROMPT, TEXTS
-from src.logic.processor import normalize_df, parse_md, extract_from_page
+from src.logic.processor import normalize_df, parse_md, extract_from_page, parse_page_query
 
 class PDFToXLSXGUI:
     def __init__(self, root):
@@ -76,7 +77,7 @@ class PDFToXLSXGUI:
     def _load_icons(self):
         # Base directory is PDF_to_XLSX/
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        icon_dir = os.path.join(base_dir, "icons")
+        icon_dir = os.path.join(base_dir, "src", "assets", "icons")
         icon_map = {
             "pdf": "pdf_icon.png", "excel": "excel_icon.png",
             "csv": "csv_icon.png", "md": "markdown_icon.png"
@@ -314,7 +315,7 @@ class PDFToXLSXGUI:
         self.root.update_idletasks()
 
     def _load_existing_api_key(self):
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # points to src/
         env_path = os.path.join(base_dir, "api_key.env")
         if os.path.exists(env_path):
             load_dotenv(env_path)
@@ -329,7 +330,7 @@ class PDFToXLSXGUI:
         if not key:
             messagebox.showwarning(TEXTS[self.lang]["warning"], TEXTS[self.lang]["no_key"])
             return
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # points to src/
         env_path = os.path.join(base_dir, "api_key.env")
         if not os.path.exists(env_path):
             with open(env_path, "w") as f: f.write(f"API_KEY={key}\n")
@@ -416,7 +417,14 @@ class PDFToXLSXGUI:
                 all_results = []
                 try:
                     with pdfplumber.open(pdf_path) as pdf:
-                        for page in pdf.pages:
+                        total_pages = len(pdf.pages)
+                        pages_to_process = parse_page_query(self.current_prompt, total_pages)
+                        
+                        if len(pages_to_process) < total_pages:
+                            self._log(f"Selective Mode: Processing {len(pages_to_process)} specific pages.")
+
+                        for p_idx in pages_to_process:
+                            page = pdf.pages[p_idx]
                             page_res = extract_from_page(client, page, self.current_prompt, 
                                                        lambda p: self._log(TEXTS[self.lang]["analyzing_page"].format(p)),
                                                        tracker)
