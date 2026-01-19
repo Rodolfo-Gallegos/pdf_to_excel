@@ -6,30 +6,45 @@ echo   PDF Table Extractor - Launcher
 echo ==================================================
 echo.
 
-:: 1. Check if Python is installed
-python --version >nul 2>&1
+:: 1. Check if Python is installed (check python and python3)
+set PYTHON_CMD=
+for %%P in (python python3) do (
+    where %%P >nul 2>&1
+    if !errorlevel! == 0 (
+        set PYTHON_CMD=%%P
+        goto :python_found
+    )
+)
+
+:python_check_failed
+echo [!] Python not found. Attempting to install via winget...
+winget install --id Python.Python.3.11 --exact --silent --accept-package-agreements --accept-source-agreements
 if !errorlevel! neq 0 (
-    echo [!] Python not found. Attempting to install via winget...
-    winget install --id Python.Python.3.11 --exact --silent --accept-package-agreements --accept-source-agreements
+    echo [X] Automated installation failed.
+    echo Please install Python manually from https://www.python.org/downloads/
+    pause
+    exit /b 1
+)
+echo [OK] Python installed successfully. Please restart this script.
+pause
+exit /b 0
+
+:python_found
+:: 2. Check and Install Dependencies if missing
+echo [*] Checking dependencies...
+!PYTHON_CMD! -c "import google.genai" >nul 2>&1
+if !errorlevel! neq 0 (
+    echo [*] Installing dependencies...
+    !PYTHON_CMD! -m pip install --upgrade pip >nul 2>&1
+    !PYTHON_CMD! -m pip install -r src/requirements.txt >nul 2>&1
     if !errorlevel! neq 0 (
-        echo [X] Automated installation failed.
-        echo Please install Python manually from https://www.python.org/downloads/
+        echo [X] Failed to install dependencies.
         pause
         exit /b 1
     )
-    echo [OK] Python installed successfully. Please restart this script.
-    pause
-    exit /b 0
-)
-
-:: 2. Install requirements from src/
-echo [*] Checking dependencies...
-python -m pip install --upgrade pip >nul 2>&1
-pip install -r src/requirements.txt >nul 2>&1
-if !errorlevel! neq 0 (
-    echo [X] Failed to install dependencies.
-    pause
-    exit /b 1
+    echo [OK] Dependencies installed.
+) else (
+    echo [OK] Dependencies are up to date.
 )
 
 :: 3. Create Desktop Shortcut (if not exists)
@@ -38,9 +53,20 @@ set "SC_PATH=%USERPROFILE%\Desktop\%SC_NAME%"
 
 if not exist "%SC_PATH%" (
     echo [*] Creating Desktop Shortcut...
+    :: Get full path to pythonw based on our found python command
+    for /f "delims=" %%I in ('where !PYTHON_CMD!') do (
+        set "PYTHON_EXE=%%I"
+        set "PYTHONW_EXE=!PYTHON_EXE:python.exe=pythonw.exe!"
+        set "PYTHONW_EXE=!PYTHONW_EXE:python3.exe=pythonw3.exe!"
+        :: Verify pythonw exists, otherwise fallback to python
+        if not exist "!PYTHONW_EXE!" set "PYTHONW_EXE=!PYTHON_EXE!"
+        goto :found_exe
+    )
+    :found_exe
+    
     powershell -ExecutionPolicy Bypass -Command ^
         "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%SC_PATH%'); ^
-        $s.TargetPath='pythonw.exe'; ^
+        $s.TargetPath='!PYTHONW_EXE!'; ^
         $s.Arguments='\"%~dp0src\main.py\"'; ^
         $s.WorkingDirectory='%~dp0'; ^
         $s.IconLocation='%~dp0src\assets\icons\pdf_to_excel.png'; ^
@@ -51,7 +77,19 @@ if not exist "%SC_PATH%" (
 
 :: 4. Launch GUI
 echo [*] Launching Application...
-start pythonw src/main.py
+:: Find pythonw again for launching
+for /f "delims=" %%I in ('where !PYTHON_CMD!') do (
+    set "EXE=%%I"
+    set "PW=!EXE:python.exe=pythonw.exe!"
+    set "PW=!PW:python3.exe=pythonw3.exe!"
+    if exist "!PW!" (
+        start "" "!PW!" "%~dp0src\main.py"
+    ) else (
+        start "" "!EXE!" "%~dp0src\main.py"
+    )
+    goto :launched
+)
+:launched
 
 timeout /t 3 >nul
 exit /b 0
