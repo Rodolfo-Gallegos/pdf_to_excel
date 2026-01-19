@@ -40,8 +40,8 @@ An AI-powered tool that extracts tables from PDF files using Gemini AI.
 
 ## Documentation
 
-- [Full Documentation (English)](docs/User_guide.md)
-- [Documentación Completa (Español)](docs/Guia_de_usuario.md)
+- [Full documentation (English)](docs/User_guide.md)
+- [Documentación completa (Español)](docs/Guia_de_usuario.md)
 
 ---
 
