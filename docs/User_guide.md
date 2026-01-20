@@ -16,9 +16,38 @@ An AI-powered tool that extracts tables from PDF files by analyzing pages as ima
 - **Multimodal AI**: Computer vision extraction.
 - **Graphical Interface (GUI)**: Real-time logs and progress.
 - **Multi-format Export**: Excel (.xlsx), CSV, and Markdown.
-- **Selective Processing**: Ask for specific pages (e.g., "Page 2").
+- **Selective Processing**: Advanced control over which pages to analyze using natural language.
 
-## 📂 Project Structure
+---
+
+## 🧠 Smart page selection
+
+The AI prompt is not only used to tell Gemini how to extract the data, but also to specify **which** data to look at. You can use natural language to filter pages and documents.
+
+### Basic selection
+
+- **Single page:** _"Extract tables from page 3"_
+- **Lists:** _"Process pages 1, 5, and 10"_
+- **Ranges:** _"Get data from files using pages 2 to 6"_
+
+### Ordinal selection (Smart Words)
+
+The system understands ordinal numbers (both in English and Spanish):
+
+- _"Extract the **first** page and the **last** page"_
+- _"Process the **third** and **fifth** pages"_
+- **Supported words:** first (primera), second (segunda), ..., tenth (décima), last (última).
+
+### Document-specific filtering
+
+When processing multiple files at once, you can target specific files:
+
+- _"Extract page 1 from **Document_A.pdf** and the last page from **Document_B.pdf**"_
+- _"Extract tables from **Doc1**"_ (This will skip other files in the queue)
+
+---
+
+## 📂 Project structure
 
 ```text
 PDF_to_XLSX/
@@ -37,7 +66,7 @@ PDF_to_XLSX/
     └── api_key.env      # API Key configuration
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick start
 
 ### For Windows
 
@@ -53,7 +82,7 @@ PDF_to_XLSX/
 
 ---
 
-## 🛠 How to Use
+## 🛠 How to use
 
 ### Version 1: Graphical interface (GUI)
 
