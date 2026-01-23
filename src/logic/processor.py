@@ -143,41 +143,54 @@ def extract_from_page(client: genai.Client, page: Any, prompt: str, log_callback
     try:
         img = page.to_image(resolution=300).original
         
-        max_retries = 1
+        max_retries = 3
         md_text = ""
         for attempt in range(max_retries):
             try:
                 response = client.models.generate_content(
-                    model='gemini-3-flash-preview',
+                    model='gemini-2.5-flash-lite',
                     contents=[prompt, img]
                 )
                 if response and hasattr(response, 'text') and response.text:
                     md_text = response.text
+                    if md_text.strip():
+                        break # Found something
+                
+                # If we get here with empty text, maybe retry
+                if attempt < max_retries - 1:
+                    time.sleep(2)
+                    continue
                 break
             except Exception as e:
-                if "400" in str(e):
-                    if error_tracker is not None: error_tracker["has_error"] = True
-                    raise e
-                elif "403" in str(e):
-                    if error_tracker is not None: error_tracker["has_error"] = True
-                    raise e
-                elif "429" in str(e):
+                err_msg = str(e).lower()
+                is_transient = "503" in err_msg or "overloaded" in err_msg or "timeout" in err_msg or "500" in err_msg
+                is_quota = "429" in err_msg or "quota" in err_msg
+                
+                if is_transient or is_quota:
                     if attempt < max_retries - 1:
-                        time.sleep((attempt + 1) * 10)
+                        wait_time = (attempt + 1) * 15 if is_quota else (attempt + 1) * 5
+                        time.sleep(wait_time)
+                        continue
                     else:
                         if error_tracker is not None: error_tracker["has_error"] = True
                         raise e
+                elif "400" in err_msg or "403" in err_msg:
+                    if error_tracker is not None: error_tracker["has_error"] = True
+                    raise e
                 else:
+                    if attempt < max_retries - 1:
+                        time.sleep(2)
+                        continue
                     raise e
         
+        if not md_text or not md_text.strip():
+            return []
+            
         clean_md = md_text.replace("```markdown", "").replace("```", "").strip()
         if clean_md:
             df = parse_md(clean_md)
             if not df.empty:
                 return [{"df": df, "md": clean_md}]
     except Exception as e:
-        if "400" in str(e) or "429" in str(e) or "403" in str(e):
-            raise e
-        else:
-            raise e
+        raise e
     return []

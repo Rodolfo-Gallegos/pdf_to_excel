@@ -12,6 +12,8 @@ import pandas as pd
 from google import genai
 from dotenv import load_dotenv, set_key
 from PIL import Image, ImageTk
+import json
+import hashlib
 
 # Modular imports
 from src import config
@@ -389,6 +391,16 @@ class PDFToXLSXGUI:
         self.progress["maximum"] = len(self.pdf_files)
         threading.Thread(target=self._process_logic, daemon=True).start()
 
+    def _get_cache_path(self, pdf_path, page_idx):
+        out_dir = self.output_dir.get().strip()
+        cache_dir = os.path.join(out_dir, ".cache")
+        os.makedirs(cache_dir, exist_ok=True)
+        
+        file_hash = hashlib.md5(os.path.basename(pdf_path).encode()).hexdigest()[:8]
+        prompt_hash = hashlib.md5(self.current_prompt.encode()).hexdigest()[:8]
+        cache_filename = f"{file_hash}_p{page_idx}_{prompt_hash}.json"
+        return os.path.join(cache_dir, cache_filename)
+
     def _process_logic(self):
         key = self.api_key.get().strip()
         out_dir = self.output_dir.get().strip()
@@ -408,20 +420,6 @@ class PDFToXLSXGUI:
             if not excel_filename.endswith('.xlsx'): excel_filename += '.xlsx'
             excel_path = os.path.join(out_dir, excel_filename)
             
-            writer = None
-            try:
-                if self.save_excel.get():
-                    if os.path.exists(excel_path):
-                        writer = pd.ExcelWriter(excel_path, engine='openpyxl', mode='a', if_sheet_exists='replace')
-                    else:
-                        writer = pd.ExcelWriter(excel_path, engine='openpyxl')
-                        pd.DataFrame([["Tables extracted from GUI Application"]]).to_excel(writer, sheet_name="Summary", index=False, header=False)
-            except PermissionError:
-                self._log(f"ERROR: Permission denied for {excel_filename}. Please close the file.")
-                messagebox.showerror(TEXTS[self.lang]["error"], f"{TEXTS[self.lang]['file_open_error']}\n{excel_filename}")
-                self.root.after(0, lambda: self.start_btn.config(state="normal"))
-                return
-
             tracker = {"has_error": False}
             for i, pdf_path in enumerate(self.pdf_files):
                 file_name = os.path.basename(pdf_path)
@@ -438,26 +436,80 @@ class PDFToXLSXGUI:
                             self._log(f"Selective Mode: Processing {len(pages_to_process)} specific pages.")
 
                         for p_idx in pages_to_process:
+                            cache_file = self._get_cache_path(pdf_path, p_idx)
+                            
+                            # Try to load from cache
+                            if os.path.exists(cache_file):
+                                try:
+                                    with open(cache_file, 'r', encoding='utf-8') as f:
+                                        cached_data = json.load(f)
+                                        # cached_data is a list of results
+                                        for res in cached_data:
+                                            # If it was empty, it might be an empty list or have no 'df'
+                                            if 'df' in res and res['df'] is not None:
+                                                res['df'] = pd.DataFrame(res['df'])
+                                        
+                                        if cached_data:
+                                            all_results.extend(cached_data)
+                                            self._log(f"Restored page {p_idx+1} from cache.")
+                                        else:
+                                            self._log(f"Page {p_idx+1} has no tables (cached).")
+                                        continue
+                                except Exception as e:
+                                    self._log(f"Cache error for p{p_idx+1}: {e}. Re-analyzing...")
+
                             page = pdf.pages[p_idx]
                             page_res = extract_from_page(client, page, self.current_prompt, 
                                                        lambda p: self._log(TEXTS[self.lang]["analyzing_page"].format(p)),
                                                        tracker)
-                            all_results.extend(page_res)
+                            
+                            # Save to cache (even if empty to avoid re-analyzing)
+                            cache_to_save = []
+                            if page_res:
+                                for res in page_res:
+                                    cache_to_save.append({
+                                        'df': res['df'].to_dict(orient='records'),
+                                        'md': res['md']
+                                    })
+                                all_results.extend(page_res)
+                            else:
+                                self._log(f"No tables found on page {p_idx+1}.")
+                            
+                            # Always save cache file to mark as 'analyzed'
+                            with open(cache_file, 'w', encoding='utf-8') as f:
+                                json.dump(cache_to_save, f, ensure_ascii=False, indent=2)
                     
                     if all_results:
-                        processed = []
+                        processed_dfs = []
                         for res in all_results:
                             df = res['df']
                             if self.clean_data.get(): df = normalize_df(df)
-                            processed.append({"df": df, "md": res['md']})
+                            
+                            # Add a separator row if this is not the first table
+                            if processed_dfs:
+                                # Create a separator row with the same number of columns
+                                separator = pd.DataFrame([["--- NEXT TABLE / PAGE ---"] + [""] * (df.shape[1] - 1)])
+                                processed_dfs.append(separator)
+                                
+                            processed_dfs.append(df)
                         
-                        all_dfs = [p['df'] for p in processed]
-                        combined_df = pd.concat(all_dfs, ignore_index=True)
+                        combined_df = pd.concat(processed_dfs, ignore_index=True)
                         short_name = os.path.splitext(file_name)[0]
                         
-                        if writer:
-                            combined_df.to_excel(writer, sheet_name=short_name[:31].strip(), index=False, header=False)
-                        
+                        # Save per PDF to ensure progress is recorded
+                        if self.save_excel.get():
+                            try:
+                                # Open and close writer per PDF to ensure save
+                                if os.path.exists(excel_path):
+                                    with pd.ExcelWriter(excel_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                                        combined_df.to_excel(writer, sheet_name=short_name[:31].strip(), index=False, header=False)
+                                else:
+                                    with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
+                                        pd.DataFrame([["Tables extracted from GUI Application"]]).to_excel(writer, sheet_name="Summary", index=False, header=False)
+                                        combined_df.to_excel(writer, sheet_name=short_name[:31].strip(), index=False, header=False)
+                            except PermissionError:
+                                self._log(f"ERROR: Permission denied for {excel_filename}. Progress for {file_name} might not be saved.")
+
                         if self.save_md.get():
                             md_filename = self.md_name.get().strip()
                             if not md_filename.endswith('.md'): md_filename += '.md'
@@ -484,13 +536,9 @@ class PDFToXLSXGUI:
                 
                 self.root.after(0, lambda v=i+1: self.progress.config(value=v))
 
-            if writer:
-                writer.close()
-                writer = None
-                if not tracker["has_error"]: self._log(f"Results consolidated in EXCEL: {excel_filename}")
-
             if not tracker["has_error"]:
                 self._log(TEXTS[self.lang]["all_tasks_done"])
+                if self.save_excel.get(): self._log(f"Results consolidated in EXCEL: {excel_filename}")
                 self.root.after(0, lambda: messagebox.showinfo(TEXTS[self.lang]["process_finished"], TEXTS[self.lang]["process_success"]))
             else:
                 self._log(TEXTS[self.lang]["process_error"])
@@ -508,7 +556,4 @@ class PDFToXLSXGUI:
                 messagebox.showerror(TEXTS[self.lang]["error"], f"{TEXTS[self.lang]['fatal_error']}: {e}")
         
         finally:
-            if 'writer' in locals() and writer:
-                try: writer.close()
-                except: pass
             self.root.after(0, lambda: self.start_btn.config(state="normal"))
