@@ -6,7 +6,6 @@ __pycache__/
 *$py.class
 venv/
 .venv/
-*.env
 
 # Tables
 tables.pdf
