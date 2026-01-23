@@ -31,10 +31,13 @@ Una **aplicación de escritorio** potenciada por IA que extrae tablas de archivo
 ## ✨ Características principales
 
 * **IA multimodal**: análisis visual de páginas PDF como imágenes
+* **Modelo**: utiliza **Gemini AI** (`gemini-2.5-flash-lite`) para máxima precisión
+* **Persistencia y Caché**: guarda el progreso automáticamente; si el proceso se interrumpe, continúa desde la última página analizada
+* **Formato Excel mejorado**: incluye separadores claros entre páginas para una mejor lectura de datos
 * **Interfaz gráfica (GUI)** fácil de usar
-* **Multi‑formato**: exporta a Excel (`.xlsx`), CSV (`.csv`) y Markdown (`.md`)
+* **Multi-formato**: exporta a Excel (`.xlsx`), CSV (`.csv`) y Markdown (`.md`)
 * **Selección inteligente de páginas** usando lenguaje natural
-* **Soporte multi‑archivo** en una sola ejecución
+* **Soporte multi-archivo** en una sola ejecución
 * **Resultados organizados** con hoja de resumen en Excel
 
 ---
@@ -110,6 +113,7 @@ Durante la primera ejecución, el sistema:
    ```bash
    chmod +x Linux_exec.sh
    ```
+
 3. Ejecuta:
 
    ```bash
@@ -165,6 +169,7 @@ Al finalizar:
 * Renderizado de páginas: `pdfplumber` (300 DPI)
 * Procesamiento visual mediante Gemini
 * La aplicación se ejecuta localmente; solo las imágenes se envían a la IA
+
 
 ---
 

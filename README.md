@@ -22,10 +22,13 @@ An **AI-powered desktop application** that extracts tables from PDF files (scann
 
 * Extracts tables from one or multiple PDF files
 * Works with **scanned and digital PDFs**
+* Uses **Gemini AI** (`gemini-2.5-flash-lite`) for all extractions
 * Exports results to:
   * Excel (`.xlsx`)
   * CSV (`.csv`)
   * Markdown (`.md`)
+* **Persistence & Cache**: Automatically saves progress and resumes from the last analyzed page if interrupted
+* **Enhanced Excel Formatting**: Clear separators between pages for better readability
 * Allows smart page selection using natural language prompts
 * Supports **English and Spanish** interfaces
 
@@ -92,6 +95,7 @@ An **AI-powered desktop application** that extracts tables from PDF files (scann
    ```bash
    chmod +x Linux_exec.sh
    ```
+
 3. Run:
 
    ```bash
@@ -146,9 +150,10 @@ You can obtain an API key from:
 
   * A default folder is created automatically:
 
-    ```
+    ```text
     extracted_tables/
     ```
+
   * You may change the output path if desired
 
 * **File formats**:
@@ -219,7 +224,6 @@ You can control which pages or files are processed by editing the prompt.
 * The Excel output contains a **Summary** sheet followed by one sheet per processed PDF
 * The application runs **locally**; only the AI request is sent to Gemini
 * First run is slower due to dependency installation
-
 ---
 
 If you encounter issues, please check the documentation or open an issue on GitHub.
